@@ -162,6 +162,15 @@ public class MainHttp extends Application {
             }
         });
         
+        serverPortField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER)  {
+                    startServerButton.fire();
+                }
+            }
+        });
+        
         Scene scene = new Scene(grid, 500, 450);
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
@@ -197,6 +206,5 @@ public class MainHttp extends Application {
         this.logLinesList.add(finalMessage);
         if(sp.getVbarPolicy() == ScrollPane.ScrollBarPolicy.NEVER)
             sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-    }
-    
+    } 
 }
