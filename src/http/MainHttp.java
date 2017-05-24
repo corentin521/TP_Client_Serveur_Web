@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,7 +39,6 @@ public class MainHttp extends Application {
     
     private Thread serverThread;
     private Server httpServer;
-    private TextArea log;
     private ObservableList<Node> logLinesList;
     private ScrollPane sp;
     
@@ -103,6 +104,7 @@ public class MainHttp extends Application {
         sp.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         sp.setContent(fp);
+        
         grid.add(sp, 0, 2, 7, 40);
         
         writeInformationInLog("Bienvenue sur l'assistant de configuration de serveur"
@@ -169,6 +171,10 @@ public class MainHttp extends Application {
                     startServerButton.fire();
                 }
             }
+        });
+        
+        logLinesList.addListener((ListChangeListener.Change<? extends Node> c) -> {
+            sp.setVvalue(1.0);
         });
         
         Scene scene = new Scene(grid, 500, 450);
