@@ -1,12 +1,16 @@
 package http;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import javafx.application.Platform;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server implements Runnable {
     
@@ -17,10 +21,10 @@ public class Server implements Runnable {
     final int bufferSize = 2000;
 
     public Server(InetAddress serverIP, int serverPort) throws IOException {
-        this.serverSocket = new ServerSocket(1026);
         this.isRunning = true;
         this.serverIP = serverIP;
         this.serverPort = serverPort;
+        this.serverSocket = new ServerSocket(this.serverPort);
     }
 
     @Override
@@ -30,14 +34,36 @@ public class Server implements Runnable {
         
         while(this.isRunning){
             try {
-                DatagramSocket ds = new DatagramSocket(this.serverPort, this.serverIP);
-                byte [] data = new byte[this.bufferSize];
+                /*
+                Socket clientSocket = serverSocket.accept();/*
+                InputStreamReader isr =  new InputStreamReader(clientSocket.getInputStream());
+                BufferedReader br = new BufferedReader(isr);
+                String line = br.readLine();            
+                while (!line.isEmpty()) {
+                    System.out.println(line);
+                    line = br.readLine();
+                }
+                String httpResponse = "HTTP/1.1 200 OK\\r\\n\\r\\nRéponse du serveur";
+                clientSocket.getOutputStream().write(httpResponse.getBytes("UTF-8"));
+                */
                 
-                DatagramPacket dp = new DatagramPacket(data, data.length);
-                ds.receive(dp);
-                ds.close();
-            } catch (Exception ex) {
-                System.err.println(ex.getMessage());
+                try (Socket clientSocket = serverSocket.accept()) {
+                
+                InputStreamReader isr =  new InputStreamReader(clientSocket.getInputStream());
+                BufferedReader br = new BufferedReader(isr);
+                String line = br.readLine();            
+                while (!line.isEmpty()) {
+                    System.out.println(line);
+                    line = br.readLine();
+                }
+                    
+                String message = "Réponse du serveur";
+                String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
+                clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
+            }
+
+            } catch (Exception e) {
+                Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
             }
         }
     }

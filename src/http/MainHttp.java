@@ -2,8 +2,6 @@ package http;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +11,6 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -23,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -125,7 +121,7 @@ public class MainHttp extends Application {
                         if(port < 1024 || port > 65536)
                         writeErrorInLog("Le port doit être compris entre 1024 et 65536.");
                         else{
-                            if(startServerButton.getText().equals("Start")){
+                            if(startServerButton.getText().equals("Démarrer")){
                             httpServer = new Server(InetAddress.getLocalHost(), Integer.valueOf(serverPortField.getText()));
                             serverThread = new Thread(httpServer);
                             serverThread.start();
@@ -135,7 +131,7 @@ public class MainHttp extends Application {
 
                             }else{
                                 httpServer.stop();
-                                startServerButton.setText("Start");
+                                startServerButton.setText("Démarrer");
                                 writeSuccessInLog("Le serveur a été arrêté avec succès.");
                             }
                         }
