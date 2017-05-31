@@ -33,30 +33,29 @@ public class Server implements Runnable {
         this.isRunning = true;
         
         while(this.isRunning){
-            try 
+            try{
                 try (Socket clientSocket = serverSocket.accept()) {
                 
-                InputStreamReader isr =  new InputStreamReader(clientSocket.getInputStream());
-                BufferedReader br = new BufferedReader(isr);
-                String line = br.readLine();
-                String [] parts = line.split(" ");
-                
-                // Affichage de la requête
-                while (!line.isEmpty()) {
-                    line = br.readLine();
-                    System.out.println(line);
-                }
-                
-                // Réponse du serveur
-                if(parts[0].equals("GET")){
-                    System.out.println("Requête GET");
+                    InputStreamReader isr =  new InputStreamReader(clientSocket.getInputStream());
+                    BufferedReader br = new BufferedReader(isr);
+                    String line = br.readLine();
+                    String [] parts = line.split(" ");
 
-                    String message = "Réponse du serveur";
-                    String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
-                    clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
+                    // Affichage de la requête
+                    while (!line.isEmpty()) {
+                        line = br.readLine();
+                        System.out.println(line);
+                    }
+
+                    // Réponse du serveur
+                    if(parts[0].equals("GET")){
+                        System.out.println("Requête GET");
+
+                        String message = "Réponse du serveur";
+                        String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
+                        clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
+                    }
                 }
-                
-            }
 
             } catch (Exception e) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
