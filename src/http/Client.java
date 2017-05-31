@@ -17,7 +17,6 @@ public class Client {
         port = 1026;
         socketClient = new Socket(ip,port);
         this.requete = requete;
-        
     }
     
     private void run()
