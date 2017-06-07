@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,17 +43,23 @@ public class MainClient extends Application {
         adressField.setPromptText("Saisir une adresse");
         adressField.setPrefWidth(400);
         
-        //Image loadAdressButtonIcon = new Image(getClass().getResourceAsStream("../refreshIcon.png"));
+        ImageView loadAdressButtonIcon = new ImageView(new Image("file:refreshIcon.png"));
+        loadAdressButtonIcon.setFitHeight(12);
+        loadAdressButtonIcon.setFitWidth(12);
         Button loadAdressButton = new Button();
         loadAdressButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
-        //loadAdressButton.setGraphic(new ImageView(loadAdressButtonIcon));
+        loadAdressButton.setGraphic(loadAdressButtonIcon);
         
         TextField searchField = new TextField();
         searchField.setPromptText("Rechercher");
         searchField.setPrefWidth(200);
         
-        Button performSearchButton = new Button("Démarrer");
+        ImageView performSearchButtonIcon = new ImageView(new Image("file:performSearch.png"));
+        performSearchButtonIcon.setFitHeight(15);
+        performSearchButtonIcon.setFitWidth(12);
+        Button performSearchButton = new Button();
         performSearchButton.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
+        performSearchButton.setGraphic(performSearchButtonIcon);
         
         HBox.setMargin(loadAdressButton, new Insets(0,10,0,0));
         
@@ -84,6 +93,14 @@ public class MainClient extends Application {
         primaryStage.setResizable(false);
         primaryStage.setScene(scene);
         primaryStage.show();
+        
+        loadAdressButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                String url = adressField.getText();
+                webEngine.load(url);
+            }
+        });
     }
     
 }
