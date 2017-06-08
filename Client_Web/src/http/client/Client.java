@@ -32,6 +32,7 @@ public class Client implements Runnable  {
         while(this.isRunning){
             try {
                 if(performedRequest){
+                     System.out.println("aaa");
                     DataOutputStream outToServer = new DataOutputStream(socketClient.getOutputStream());
                     DataInputStream inFromServer = new DataInputStream(socketClient.getInputStream());
                     outToServer.writeBytes("1 " + requete + "\n");
@@ -108,7 +109,6 @@ public class Client implements Runnable  {
 
                         }
                     }
-                performedRequest = false;
                 } 
             } catch (IOException ex) {
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,7 +123,7 @@ public class Client implements Runnable  {
         requete+=" HTTP/1.1";
         if(url.contains("http://"))
             url = url.replace("http://", "");
-        
+       
         InetAddress IPAddress;
         try {
             IPAddress = InetAddress.getByName(url.split(":")[0]);

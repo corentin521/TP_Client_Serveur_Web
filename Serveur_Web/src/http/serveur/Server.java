@@ -93,7 +93,7 @@ public class Server implements Runnable {
                                 inputStream.read(bufferEnvoi);
                             }catch(FileNotFoundException e){
                                 message = "404\n";
-                                httpHead = "HTTP/1.1 404 \r\n\r\n" + message;
+                                httpHead = "HTTP/1.1 404 \n" + message;
                             }
                             
                             //clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
