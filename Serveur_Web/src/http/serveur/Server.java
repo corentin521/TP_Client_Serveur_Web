@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -58,8 +59,7 @@ public class Server implements Runnable {
                     }
 
                     // Réponse du serveur
-                    if(parts[0].equals("GET"))
-                    {
+                    if(parts[0].equals("GET")){
                         System.out.println("Requête GET");
                         
                         File f = new File(parts[1]);
@@ -67,37 +67,43 @@ public class Server implements Runnable {
                         //File f = new File(parts[1].replace('/', '\\'));
                         
                         System.out.println(parts[1].replace("/", ""));
-                        if (f!=null)
-                        {
+                        if (f!=null){
                             //FileOutputStream file = new FileOutputStream(f);
-                            String message = "good";
-                            String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
-                            clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
+                            String message;
+                            String getResp = "reponse";
+                            String httpHead; 
+                            
                             
                             int size = (int) f.length();
-                            FileInputStream inputStream = new FileInputStream(parts[1].replace("/", ""));
-                            byte bufferEnvoi[] = new byte[size];
-
-                            /////// LECTURE DU FICHIER ///////
-                            inputStream.read(bufferEnvoi);
-                            inputStream.close();
+                            byte[] bufferEnvoi = new byte[size];
+                            try (FileInputStream inputStream = new FileInputStream(parts[1].replace("/", ""))) {
+                                message = "good";
+                                httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
+                                /////// LECTURE DU FICHIER ///////
+                                inputStream.read(bufferEnvoi);
+                                System.out.println("1");
+                            }catch(FileNotFoundException e){
+                                System.out.println("404");
+                                message = "404\n";
+                                httpHead = "HTTP/1.1 404 \r\n\r\n" + message;
+                            }
                             
-                            String getResp = "reponse";
+                            clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
+                            
                             outToClient.writeBytes(getResp + "\n\n");
                             outToClient.flush();
-
+                            
+                            
                             outToClient.write(bufferEnvoi);
                             outToClient.close();
                         }
-                        else
-                        {
+                        else{
                             String message = "Réponse du serveur : Le fichier "+parts[1]+" n'existe pas";
                             String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
                             clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
                         }
                     }
                 }
-
             } catch (Exception e) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, e);
             }

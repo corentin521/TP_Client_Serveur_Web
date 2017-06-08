@@ -127,7 +127,7 @@ public class MainServeur extends Application {
                             serverThread.start();
                             startServerButton.setText("Arrêter");
                             writeSuccessInLog("Le serveur a demarré avec succès sur"
-                                    + "le port " + port + " de " +  InetAddress.getLocalHost());
+                                    + " le port " + port + " de " +  InetAddress.getLocalHost());
 
                             }else{
                                 httpServer.stop();
