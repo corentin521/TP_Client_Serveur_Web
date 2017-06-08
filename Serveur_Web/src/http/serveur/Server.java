@@ -70,7 +70,7 @@ public class Server implements Runnable {
                         if (f!=null)
                         {
                             //FileOutputStream file = new FileOutputStream(f);
-                            String message = "good";
+                            String message = "HTTP/1.1 200 OK\r\n\r\n";
                             String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
                             clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
                             
