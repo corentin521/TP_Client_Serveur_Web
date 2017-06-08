@@ -1,41 +1,41 @@
 package http.client;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Client implements Runnable  {
+public class Client implements Runnable {
 
     private Socket socketClient;
     private boolean isRunning;
     private InetAddress ip;
-    private int port;
     private String requete;
     private boolean performedRequest = false;
     
-    public Client(){
-        
+    public Client()
+    {
     }
     
     @Override
     public void run() {
         System.out.println("Thread running on Server");
         this.isRunning = true;
-        
-        while(this.isRunning){
-            try {
+        while(this.isRunning){ 
+            try { 
                 if(performedRequest){
                      System.out.println("aaa");
                     DataOutputStream outToServer = new DataOutputStream(socketClient.getOutputStream());
                     DataInputStream inFromServer = new DataInputStream(socketClient.getInputStream());
-                    outToServer.writeBytes("1 " + requete + "\n");
+                    outToServer.writeBytes(requete + "\n");
                     outToServer.flush();
                     
                     String temp;
@@ -116,9 +116,11 @@ public class Client implements Runnable  {
         }
     }
     
-    public void setRequete(String url){
+   
+    
+    public void setRequete(String url) throws IOException{
         
-        requete ="GET /";
+        requete ="GET ";
         requete+=url;
         requete+=" HTTP/1.1";
         if(url.contains("http://"))
@@ -126,8 +128,10 @@ public class Client implements Runnable  {
        
         InetAddress IPAddress;
         try {
+            
             IPAddress = InetAddress.getByName(url.split(":")[0]);
             String port = url.split(":")[1].split("/")[0];
+            System.out.println("ip: " +  url.split(":")[0] + " port: " + port);
             socketClient = new Socket(IPAddress, Integer.parseInt(port));
             performedRequest = true;
         } catch (UnknownHostException ex) {
@@ -136,8 +140,4 @@ public class Client implements Runnable  {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void stop(){
-        this.isRunning = false;
-    } 
 }

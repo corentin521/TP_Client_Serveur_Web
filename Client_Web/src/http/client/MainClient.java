@@ -1,6 +1,8 @@
 package http.client;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -29,14 +31,14 @@ public class MainClient extends Application {
     }
     
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         
         // Header of the page
         HBox header = new HBox(); 
         header.setPadding(new Insets(10, 10, 10, 10));
         
         TextField adressField = new TextField();
-        adressField.setText("http://127.0.0.1:4444");
+        adressField.setText("http://127.0.0.1:4444/test.txt");
         adressField.setPromptText("Saisir une adresse");
         adressField.setPrefWidth(400);
         
@@ -91,19 +93,19 @@ public class MainClient extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
-        
-                        
         Client c = new Client();
         Thread threadClient = new Thread(c);
         threadClient.start();
         
-        
         loadAdressButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                String url = adressField.getText();
-                c.setRequete(adressField.getText());
-                //webEngine.load(url);
+                try {
+                    c.setRequete(adressField.getText());
+                    //webEngine.load(url);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         

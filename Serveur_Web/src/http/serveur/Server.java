@@ -51,27 +51,16 @@ public class Server implements Runnable {
                     InputStreamReader isr =  new InputStreamReader(clientSocket.getInputStream());
                     BufferedReader br = new BufferedReader(isr);
                     String line = br.readLine();
-                    
-                        
-                    
                     String [] parts = line.split(" ");
 
-                    //System.out.println(line);
-                    // Affichage de la requête
-                    if(line != null){
-                        while (!line.isEmpty()) {
-                            line = br.readLine();
-                            //System.out.println(line);
-                        }
-                    }
+                    System.out.println(line);
                     
                     // Réponse du serveur
                     if(parts[0].equals("GET")){
-                        
-                        File f = new File(parts[1].replace("/", ""));
+                        File f = new File(parts[1].split("/")[3]);
                         
                         if (f!=null){
-                            //FileOutputStream file = new FileOutputStream(f);
+                            
                             String message;
                             String getResp = "reponse";
                             String httpHead; 
@@ -79,11 +68,11 @@ public class Server implements Runnable {
                             String contentLength;
                             
                             int size = (int) f.length();
-                            System.err.println(size);
+                            System.out.println("lu: " + size);
                             byte[] bufferEnvoi = new byte[size];
-                            try (FileInputStream inputStream = new FileInputStream(parts[1].replace("/", ""))) {
+                            try (FileInputStream inputStream = new FileInputStream(parts[1].split("/")[3])) {
                                 
-                                contentType = "Content-Type: " + Files.probeContentType(Paths.get(parts[1].replace("/", "")));
+                                contentType = "Content-Type: " + Files.probeContentType(Paths.get(parts[1].split("/")[3]));
                                 
                                 contentLength = "Content-Length: " + Integer.toString(size);
                                 
@@ -107,7 +96,7 @@ public class Server implements Runnable {
                         }
                         else{
                             String message = "Réponse du serveur : Le fichier "+parts[1]+" n'existe pas";
-                            String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
+                            String httpHead = "HTTP/1.1 404 OK\r\n\r\n" + message;
                             clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
                         }
                     }
