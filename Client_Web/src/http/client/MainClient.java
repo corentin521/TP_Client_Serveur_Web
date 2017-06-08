@@ -1,7 +1,6 @@
 package http.client;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
@@ -10,16 +9,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.web.WebEngine;
@@ -40,6 +36,7 @@ public class MainClient extends Application {
         header.setPadding(new Insets(10, 10, 10, 10));
         
         TextField adressField = new TextField();
+        adressField.setText("http://127.0.0.1:4444");
         adressField.setPromptText("Saisir une adresse");
         adressField.setPrefWidth(400);
         
@@ -94,11 +91,35 @@ public class MainClient extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
+        
+                        
+        Client c = new Client();
+        
+        
         loadAdressButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
                 String url = adressField.getText();
-                webEngine.load(url);
+                c.setRequete(adressField.getText());
+                //webEngine.load(url);
+            }
+        });
+        
+        adressField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER && !adressField.getText().equals(""))  {
+                    loadAdressButton.fire();
+                }
+            }
+        });
+        
+        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER && !searchField.getText().equals(""))  {
+                    performSearchButton.fire();
+                }
             }
         });
     }
