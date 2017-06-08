@@ -94,6 +94,8 @@ public class MainClient extends Application {
         
                         
         Client c = new Client();
+        Thread threadClient = new Thread(c);
+        threadClient.start();
         
         
         loadAdressButton.setOnAction(new EventHandler<ActionEvent>() {
