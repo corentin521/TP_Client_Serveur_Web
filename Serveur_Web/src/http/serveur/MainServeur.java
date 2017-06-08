@@ -31,7 +31,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MainHttp extends Application {
+public class MainServeur extends Application {
     
     private Thread serverThread;
     private Server httpServer;
@@ -138,7 +138,7 @@ public class MainHttp extends Application {
                     } 
                 } catch (Exception ex) {
                     writeErrorInLog("Le port n'est pas disponible. Veuillez en choisir un autre.");
-                    Logger.getLogger(MainHttp.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MainServeur.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

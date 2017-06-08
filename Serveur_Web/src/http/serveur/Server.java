@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -61,11 +62,11 @@ public class Server implements Runnable {
                     {
                         System.out.println("Requête GET");
                         
-                        File f = new File("testClient.txt");
+                        File f = new File(parts[1]);
 
                         //File f = new File(parts[1].replace('/', '\\'));
                         
-                        System.out.println(f);
+                        System.out.println(parts[1].replace("/", ""));
                         if (f!=null)
                         {
                             //FileOutputStream file = new FileOutputStream(f);
@@ -73,12 +74,19 @@ public class Server implements Runnable {
                             String httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
                             clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
                             
+                            int size = (int) f.length();
+                            FileInputStream inputStream = new FileInputStream(parts[1].replace("/", ""));
+                            byte bufferEnvoi[] = new byte[size];
+
+                            /////// LECTURE DU FICHIER ///////
+                            inputStream.read(bufferEnvoi);
+                            inputStream.close();
                             
-                            
-                            //outToClient.writeBytes(getResp + "\n\n");
+                            String getResp = "reponse";
+                            outToClient.writeBytes(getResp + "\n\n");
                             outToClient.flush();
 
-                            //outToClient.write(bufferEnvoi);
+                            outToClient.write(bufferEnvoi);
                             outToClient.close();
                         }
                         else
