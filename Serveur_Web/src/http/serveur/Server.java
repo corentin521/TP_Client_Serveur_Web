@@ -11,8 +11,11 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.shape.Path;
 
 public class Server implements Runnable {
     
@@ -53,7 +56,7 @@ public class Server implements Runnable {
                     
                     String [] parts = line.split(" ");
 
-                    System.out.println(line);
+                    //System.out.println(line);
                     // Affichage de la requête
                     if(line != null){
                         while (!line.isEmpty()) {
@@ -64,37 +67,38 @@ public class Server implements Runnable {
                     
                     // Réponse du serveur
                     if(parts[0].equals("GET")){
-                        System.out.println("Requête GET");
                         
-                        File f = new File(parts[1]);
-
-                        //File f = new File(parts[1].replace('/', '\\'));
+                        File f = new File(parts[1].replace("/", ""));
                         
-                        System.out.println(parts[1].replace("/", ""));
                         if (f!=null){
                             //FileOutputStream file = new FileOutputStream(f);
                             String message;
                             String getResp = "reponse";
                             String httpHead; 
-                            
+                            String contentType;
+                            String contentLength;
                             
                             int size = (int) f.length();
+                            System.err.println(size);
                             byte[] bufferEnvoi = new byte[size];
                             try (FileInputStream inputStream = new FileInputStream(parts[1].replace("/", ""))) {
-                                message = "good";
-                                httpHead = "HTTP/1.1 200 OK\r\n\r\n" + message;
+                                
+                                contentType = "Content-Type: " + Files.probeContentType(Paths.get(parts[1].replace("/", "")));
+                                
+                                contentLength = "Content-Length: " + Integer.toString(size);
+                                
+                                httpHead = "HTTP/1.1 200 OK\n" + contentType + "\n" +contentLength;
+                                
                                 /////// LECTURE DU FICHIER ///////
                                 inputStream.read(bufferEnvoi);
-                                System.out.println("1");
                             }catch(FileNotFoundException e){
-                                System.out.println("404");
                                 message = "404\n";
                                 httpHead = "HTTP/1.1 404 \r\n\r\n" + message;
                             }
                             
-                            clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
-                            
-                            outToClient.writeBytes(getResp + "\n\n");
+                            //clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
+                            System.out.println(httpHead);
+                            outToClient.writeBytes(httpHead + "\n\n");
                             outToClient.flush();
                             
                             
