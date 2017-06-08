@@ -6,7 +6,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -52,15 +51,20 @@ public class Server implements Runnable {
                     InputStreamReader isr =  new InputStreamReader(clientSocket.getInputStream());
                     BufferedReader br = new BufferedReader(isr);
                     String line = br.readLine();
+                    
+                        
+                    
                     String [] parts = line.split(" ");
 
                     //System.out.println(line);
                     // Affichage de la requête
-                    while (!line.isEmpty()) {
-                        line = br.readLine();
-                        //System.out.println(line);
+                    if(line != null){
+                        while (!line.isEmpty()) {
+                            line = br.readLine();
+                            //System.out.println(line);
+                        }
                     }
-
+                    
                     // Réponse du serveur
                     if(parts[0].equals("GET")){
                         
