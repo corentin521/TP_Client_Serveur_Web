@@ -75,10 +75,10 @@ public class Server implements Runnable {
                             
                             
                             
-                            outToClient.writeBytes(getResp + "\n\n");
+                            //outToClient.writeBytes(getResp + "\n\n");
                             outToClient.flush();
 
-                            outToClient.write(bufferEnvoi);
+                            //outToClient.write(bufferEnvoi);
                             outToClient.close();
                         }
                         else
