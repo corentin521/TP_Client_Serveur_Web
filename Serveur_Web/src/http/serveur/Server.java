@@ -71,7 +71,7 @@ public class Server implements Runnable {
                         File f = new File(parts[1].replace("/", ""));
                         
                         if (f!=null){
-                            //FileOutputStream file = new FileOutputStream(f);
+                            
                             String message;
                             String getResp = "reponse";
                             String httpHead; 
