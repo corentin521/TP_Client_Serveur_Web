@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -31,7 +33,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MainServeur extends Application {
+public class MainServeur extends Application implements Observer {
     
     private Thread serverThread;
     private Server httpServer;
@@ -209,4 +211,12 @@ public class MainServeur extends Application {
         if(sp.getVbarPolicy() == ScrollPane.ScrollBarPolicy.NEVER)
             sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
     } 
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("efdf");
+        System.out.println(arg.toString());
+        if(httpServer.getLog() != null)
+            writeInformationInLog(httpServer.getLog());
+    }
 }

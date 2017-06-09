@@ -13,17 +13,20 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.shape.Path;
 
-public class Server implements Runnable {
+public class Server extends Observable implements Runnable  {
     
     private ServerSocket serverSocket;
     private boolean isRunning;
     private InetAddress serverIP;
     private int serverPort;
     final int bufferSize = 2000;
+    private String log;
+    private String reponse;
 
     public Server(InetAddress serverIP, int serverPort) throws IOException {
         this.isRunning = true;
@@ -54,6 +57,9 @@ public class Server implements Runnable {
                     String [] parts = line.split(" ");
 
                     System.out.println(line);
+                    this.log = line;
+                    setChanged();
+                    notifyObservers(this.log);
                     
                     // Réponse du serveur
                     if(parts[0].equals("GET")){
@@ -87,6 +93,10 @@ public class Server implements Runnable {
                             
                             //clientSocket.getOutputStream().write(httpHead.getBytes("UTF-8"));
                             System.out.println(httpHead);
+                            this.reponse = httpHead;
+                            setChanged();
+                            notifyObservers(this.reponse);
+                    
                             outToClient.writeBytes(httpHead + "\n\n");
                             outToClient.flush();
                             
@@ -110,5 +120,20 @@ public class Server implements Runnable {
     public void stop(){
         this.isRunning = false;
     }
-    
+
+    public String getLog() {
+        return log;
+    }
+
+    public void setLog(String log) {
+        this.log = log;
+    }
+
+    public String getReponse() {
+        return reponse;
+    }
+
+    public void setReponse(String reponse) {
+        this.reponse = reponse;
+    }  
 }

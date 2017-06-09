@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +36,6 @@ public class Client implements Runnable {
             System.out.print("");
             try {
                 if(performedRequest){
-                    System.out.println("aaa");
                     DataOutputStream outToServer = new DataOutputStream(socketClient.getOutputStream());
                     DataInputStream inFromServer = new DataInputStream(socketClient.getInputStream());
                     
