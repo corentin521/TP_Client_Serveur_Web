@@ -1,6 +1,7 @@
 package http.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -101,8 +102,16 @@ public class MainClient extends Application {
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    c.setRequete(adressField.getText());
-                    //webEngine.load(url);
+                    String s = adressField.getText();
+                    if(s.contains("http://"))
+                        s = s.replace("http://", "");
+                    if(s.contains("https://"))
+                        s = s.replace("https://", "");
+                    System.out.println(InetAddress.getLocalHost().getHostAddress());
+                    if (s.contains(InetAddress.getLocalHost().getHostAddress())) {
+                        c.setRequete(adressField.getText());
+                    }
+                    webEngine.load(adressField.getText());
                 } catch (IOException ex) {
                     Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
                 }

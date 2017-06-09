@@ -57,7 +57,7 @@ public class Server implements Runnable {
                     
                     // Réponse du serveur
                     if(parts[0].equals("GET")){
-                        File f = new File(parts[1].split("/")[3]);
+                        File f = new File(parts[1].split("/")[1]);
                         
                         if (f!=null){
                             
@@ -70,9 +70,9 @@ public class Server implements Runnable {
                             int size = (int) f.length();
                             System.out.println("lu: " + size);
                             byte[] bufferEnvoi = new byte[size];
-                            try (FileInputStream inputStream = new FileInputStream(parts[1].split("/")[3])) {
+                            try (FileInputStream inputStream = new FileInputStream(parts[1].split("/")[1])) {
                                 
-                                contentType = "Content-Type: " + Files.probeContentType(Paths.get(parts[1].split("/")[3]));
+                                contentType = "Content-Type: " + Files.probeContentType(Paths.get(parts[1].split("/")[1]));
                                 
                                 contentLength = "Content-Length: " + Integer.toString(size);
                                 
