@@ -120,18 +120,26 @@ public class Client implements Runnable {
     
     public void setRequete(String url) throws IOException{
         
-        requete ="GET ";
-        requete+=url;
-        requete+=" HTTP/1.1";
+        
         if(url.contains("http://"))
             url = url.replace("http://", "");
+        
+        
+        
        
         InetAddress IPAddress;
         try {
             
             IPAddress = InetAddress.getByName(url.split(":")[0]);
             String port = url.split(":")[1].split("/")[0];
+            
+            requete ="GET ";
+            requete+=url.split("/")[1];
+            requete+=" HTTP/1.1";
+            
+            System.out.println(requete);
             System.out.println("ip: " +  url.split(":")[0] + " port: " + port);
+            
             socketClient = new Socket(IPAddress, Integer.parseInt(port));
             performedRequest = true;
         } catch (UnknownHostException ex) {
