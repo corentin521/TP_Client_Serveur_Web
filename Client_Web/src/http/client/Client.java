@@ -20,6 +20,7 @@ public class Client implements Runnable {
     private InetAddress ip;
     private String requete;
     private boolean performedRequest = false;
+    private String nomFichier;
     
     public Client()
     {
@@ -30,11 +31,13 @@ public class Client implements Runnable {
         System.out.println("Thread running on Server");
         this.isRunning = true;
         while(this.isRunning){ 
-            try { 
+            System.out.print("");
+            try {
                 if(performedRequest){
-                     System.out.println("aaa");
+                    System.out.println("aaa");
                     DataOutputStream outToServer = new DataOutputStream(socketClient.getOutputStream());
                     DataInputStream inFromServer = new DataInputStream(socketClient.getInputStream());
+                    
                     outToServer.writeBytes(requete + "\n");
                     outToServer.flush();
                     
@@ -47,7 +50,7 @@ public class Client implements Runnable {
 
                     String getAuth = inFromServer.readLine();
                     String stat_line[] = getAuth.split(" ");
-
+                    
                     //SI LA REPONSE EST OK, on lit la suite de l'header
                     if(stat_line.length > 1) {
                         if (stat_line[1].equals("200")) {
@@ -72,13 +75,13 @@ public class Client implements Runnable {
                             inFromServer.close();
 
                             //CREATION DU FICHIER A LA RACINE
-                            String nomFichierSplit = "inconnu.html";
-                            if(requete.split("/").length > 2)
-                            nomFichierSplit = requete.split("/")[2].split(" ")[0];
-                            File file = new File("RECU"+nomFichierSplit);
+//                            String nomFichierSplit = "inconnu.html";
+//                            if(requete.split("/").length > 2)
+//                            nomFichierSplit = requete.split("/")[2].split(" ")[0];
+                            File file = new File(nomFichier);
                             file.createNewFile();
 
-                            typeFichier = nomFichierSplit;
+                            //typeFichier = nomFichierSplit;
 
                             //ECRITURE DU CONTENU RECU DANS LE FICHIER
                             FileOutputStream fop = new FileOutputStream(file);
@@ -88,6 +91,7 @@ public class Client implements Runnable {
 
                             System.out.println("TRANSFERT REUSSI");
                             socketClient.close();
+                            performedRequest = false;
                             
                         }else if (stat_line[1].equals("404")) {
                             
@@ -119,25 +123,20 @@ public class Client implements Runnable {
    
     
     public void setRequete(String url) throws IOException{
-        
-        
+
         if(url.contains("http://"))
             url = url.replace("http://", "");
         
+        InetAddress IPAddress = InetAddress.getByName(url.split(":")[0]);
+        String port = url.split(":")[1].split("/")[0];
+        url = url.split("/")[1];
+        requete ="GET /";
+        requete+=url;
+        requete+=" HTTP/1.1";
+        nomFichier = url;
         
-        
-       
-        InetAddress IPAddress;
         try {
-            
-            IPAddress = InetAddress.getByName(url.split(":")[0]);
-            String port = url.split(":")[1].split("/")[0];
-            
-            requete ="GET ";
-            requete+=url.split("/")[1];
-            requete+=" HTTP/1.1";
-            
-            System.out.println(requete);
+            System.out.println("OOOOOOOOO");
             System.out.println("ip: " +  url.split(":")[0] + " port: " + port);
             
             socketClient = new Socket(IPAddress, Integer.parseInt(port));
