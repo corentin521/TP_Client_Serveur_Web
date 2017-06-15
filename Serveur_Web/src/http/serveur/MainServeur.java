@@ -5,6 +5,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -31,7 +33,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MainServeur extends Application {
+public class MainServeur extends Application implements Observer {
     
     private Thread serverThread;
     private Server httpServer;
@@ -123,11 +125,13 @@ public class MainServeur extends Application {
                         else{
                             if(startServerButton.getText().equals("Démarrer")){
                             httpServer = new Server(InetAddress.getLocalHost(), Integer.valueOf(serverPortField.getText()));
+                            httpServer.addObserver(MainServeur.this);
                             serverThread = new Thread(httpServer);
                             serverThread.start();
                             startServerButton.setText("Arrêter");
                             writeSuccessInLog("Le serveur a demarré avec succès sur"
                                     + " le port " + port + " de " +  InetAddress.getLocalHost());
+                                writeInformationInLog("Requête HTTP de la part de 10.184.194.128 : GET /test.txt HTTP/1.1");
 
                             }else{
                                 httpServer.stop();
@@ -209,4 +213,12 @@ public class MainServeur extends Application {
         if(sp.getVbarPolicy() == ScrollPane.ScrollBarPolicy.NEVER)
             sp.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
     } 
+
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("efdf");
+        System.out.println(arg.toString());
+        
+            writeInformationInLog(httpServer.getLog());
+    }
 }

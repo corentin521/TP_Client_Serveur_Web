@@ -1,6 +1,7 @@
 package http.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -75,15 +76,9 @@ public class MainClient extends Application {
         webEngine.load("http://www.google.fr");
         browser.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         
-        // Bottom of the page
-        Label bottomLabel = new Label("Bas"); 
-        bottomLabel.setStyle("-fx-alignment: center; -fx-background-color: limegreen;"); 
-        bottomLabel.setMinHeight(50); 
-        bottomLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); 
         
         BorderPane root = new BorderPane(); 
         root.setTop(header); 
-        root.setBottom(bottomLabel); 
         root.setCenter(browser); 
         
         Scene scene = new Scene(root, 900, 800);
@@ -101,10 +96,27 @@ public class MainClient extends Application {
             @Override
             public void handle(ActionEvent e) {
                 try {
-                    c.setRequete(adressField.getText());
-                    //webEngine.load(url);
+                    String s = adressField.getText();
+                    if(s.contains("http://"))
+                        s = s.replace("http://", "");
+                    if(s.contains("https://"))
+                        s = s.replace("https://", "");
+                    System.out.println(InetAddress.getLocalHost().getHostAddress());
+                        c.setRequete(adressField.getText());
+                    webEngine.load(adressField.getText());
                 } catch (IOException ex) {
                     Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        
+        performSearchButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if(searchField.getText() != null){
+                    String url = "https://www.google.fr/search?q=" + searchField.getText();
+                    webEngine.load(url);
+                    adressField.setText(url);
                 }
             }
         });
